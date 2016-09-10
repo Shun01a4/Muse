@@ -22,6 +22,7 @@ public class Sound_Front extends Activity{
     float beforey[]={-1,-1,-1,-1};
     int record=0;
 
+	final static int maxLen = (int)Math.sqrt(600*600+950*950);//ちゃんと画面サイズ捕る : TODO
     double dist[]={0,0,0,0};
 
 	// midi用変数
@@ -117,14 +118,21 @@ public class Sound_Front extends Activity{
     private void createMidiFile()
     {
 		//音の大きさ更新
-		finalfstatic int maxLen = (int)Math.sqrt(600*600+950*950);//ちゃんと画面サイズ捕る : TODO
-		for( int i = 0; i < dist.length; i++ )
+		for( int i = 0; i < vel.length; i++ )
 		{
 			//値溢れない処理のみ : TODO
 			vel[i] = (int)( dist[i] * 127 / maxLen );
 		}
 
 		// 楽器の更新 : TODO
+		for( int i = 0; i < inst.length; i++ )
+		{
+			// いい感じに楽器変える : TODO
+			//inst[i] = ;
+		}
+
+		// テンポの更新 : TODO
+		bpm = beat;
 
         MidiFileWriter midFile = new MidiFileWriter(getBaseContext());
         try {
@@ -153,6 +161,31 @@ public class Sound_Front extends Activity{
             e.printStackTrace();
         }
     }
+
+	private void changeMidiFile()
+	{
+		// MediaPlayer再生中
+		if ( mediaPlayer.isPlaying() )
+		{
+			//停止
+			mediaPlayer.pause();
+
+			// midi作成
+			this.createMidiFile();
+
+			//再生
+			mediaPlayer.start();
+		}
+		// MediaPlayer停止中
+		else if ( !mediaPlayer.isPlaying() )
+		{
+			// midi作成
+			this.createMidiFile();
+
+			//再生
+			mediaPlayer.start();
+		}
+	}
 
     protected void onActivityResult(int requestCode,int resultCode,Intent intent){
         super.onActivityResult(requestCode,resultCode,intent);
@@ -229,27 +262,8 @@ public class Sound_Front extends Activity{
                         dist[0]=Math.sqrt((getx-600)*(getx-600)+(gety-950)*(gety-950));
                         Log.d("", "dist[0]="+dist[0]);
 
-						// MediaPlayer再生中
-						if ( mediaPlayer.isPlaying() )
-						{
-							//停止
-							mediaPlayer.pause();
-
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
-						// MediaPlayer停止中
-						else if ( !mediaPlayer.isPlaying() )
-						{
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-                            mediaPlayer.start();
-                        }
+						// MediaPlayer処理
+						this.changeMidiFile();
                 	}
                 }
 				// エリア2( 右上 )
@@ -266,27 +280,8 @@ public class Sound_Front extends Activity{
                         dist[1]=Math.sqrt((600-getx)*(600-getx)+(gety-950)*(gety-950));
                         Log.d("", "dist[1]="+dist[1]);
 
-						// MediaPlayer再生中
-						if ( mediaPlayer.isPlaying() )
-						{
-							//停止
-							mediaPlayer.pause();
-
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
-						// MediaPlayer停止中
-						else if ( !mediaPlayer.isPlaying() )
-						{
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
+						// MediaPlayer処理
+						this.changeMidiFile();
                     }
                 }
 				// エリア3( 左下 )
@@ -304,27 +299,8 @@ public class Sound_Front extends Activity{
 						dist[2]=Math.sqrt((getx-600)*(getx-600)+(950-gety)*(950-gety));
                         Log.d("", "dist[2]="+dist[2]);
 
-						// MediaPlayer再生中
-						if ( mediaPlayer.isPlaying() )
-						{
-							//停止
-							mediaPlayer.pause();
-
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
-						// MediaPlayer停止中
-						else if ( !mediaPlayer.isPlaying() )
-						{
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
+						// MediaPlayer処理
+						this.changeMidiFile();
                     }
                 }
 				// エリア4( 右下 )
@@ -342,27 +318,8 @@ public class Sound_Front extends Activity{
                         dist[3]=Math.sqrt((600-getx)*(600-getx)+(950-gety)*(950-gety));
                         Log.d("", "dist[3]="+dist[3]);
 
-						// MediaPlayer再生中
-						if ( mediaPlayer.isPlaying() )
-						{
-							//停止
-							mediaPlayer.pause();
-
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
-						// MediaPlayer停止中
-						else if ( !mediaPlayer.isPlaying() )
-						{
-							// midi作成
-							this.createMidiFile();
-
-							//再生
-							mediaPlayer.start();
-						}
+						// MediaPlayer処理
+						this.changeMidiFile();
                     }
                 }
                 break;
@@ -381,14 +338,22 @@ public class Sound_Front extends Activity{
                 beforey[1]=beforey[0];
                 beforey[0]=gety;
 
-                Log.d("", "bX:" + beforex[1] + ",bY:" + beforey[1]);//デバッグ用表示
+				//デバッグ用表示
+                Log.d("", "bX:" + beforex[1] + ",bY:" + beforey[1]);
                 Log.d("", "bX:" + beforex[3] + ",bY:" + beforey[3]);
-                if(record==0 && beforex[3]!=-1) {//座標が記録されてない時
-                    if (getx > beforex[1] && beforex[1] > beforex[3]) {//右移動時
+
+				//座標が記録されてない時
+				if(record==0 && beforex[3]!=-1)
+				{
+					//右移動時
+                    if (getx > beforex[1] && beforex[1] > beforex[3])
+					{
                         Log.d("", "spinright");
                         record = 1;//フラグ管理
                     }
-                    else {//左移動時
+					//左移動時
+                    else
+					{
                         Log.d("", "spinleft");
                         record = 2;//フラグ管理
                     }
@@ -404,6 +369,13 @@ public class Sound_Front extends Activity{
 
                 if(beat>1)
                     graphicView.setBpm(beat/2);
+
+				// テンポが変わった時
+				if( record == 0 && beat != bpm )
+				{
+					// MediaPlayer処理
+					this.changeMidiFile();
+				}
 
                 break;
 
