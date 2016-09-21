@@ -29,7 +29,7 @@ public class MidiFileWriter
     }
 
     // カエルの歌のNOTE ON, OFF
-    //小節ごとに分割
+    //小節ごとに分割 4/4拍子
     protected void FrogSong( byte ch, byte vel )
     {
         try
@@ -117,7 +117,7 @@ public class MidiFileWriter
     }
 
     // チューリップの歌のNOTE ON, OFF
-    //小節ごとに分割
+    //小節ごとに分割 4/4拍子
     protected void tulip( byte ch, byte vel )
     {
         try
@@ -230,7 +230,7 @@ public class MidiFileWriter
     }
 
     //きらきらぼしのNOTE ON, OFF
-    //小節ごとに分割
+    //小節ごとに分割 4/4拍子
     protected void TwinkleSong( byte ch, byte vel )
     {
         try
@@ -346,7 +346,7 @@ public class MidiFileWriter
     }
 
     //子犬のマーチのNOTE ON, OFF
-    //小節ごとに分割
+    //小節ごとに分割 4/4拍子
     protected void PuppySong( byte ch, byte vel )
     {
         try
