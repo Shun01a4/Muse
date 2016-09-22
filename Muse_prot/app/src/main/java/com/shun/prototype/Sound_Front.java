@@ -12,7 +12,6 @@ import java.io.*;
 public class Sound_Front extends Activity
 {
 	static final int RESULT = 1000;
-	int sound[] = { 0,0,0,0 };//データ保存用変数
 	int beat = 100;
 	int beattemp;
 
@@ -29,9 +28,9 @@ public class Sound_Front extends Activity
 	int songNo = 0;             //曲セレクト
 
 	// 楽器リスト
-	int Arrange1InstList[] = { 0, 22, 40 };
-	int Arrange2InstList[] = { 0, 22, 40 };
-	int melodyInstList[] = { 0, 53, 23, 25 };
+	int Arrange1InstList[] = new int[3];
+	int Arrange2InstList[] = new int[3];
+	int melodyInstList[] = new int[4];
 
 	//
 	int nowPos = 0;	// 再生位置
